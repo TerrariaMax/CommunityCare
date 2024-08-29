@@ -144,6 +144,7 @@ export default {
 
 <script>
 import { mapActions } from 'vuex'
+import useLocalStorage from '@/store/useLocalStorage'
 
 export default {
   data() {
@@ -156,6 +157,11 @@ export default {
         email: '',
         password: ''
       }
+    }
+  },
+  computed: {
+    storedUsers() {
+      return useLocalStorage([], 'users')
     }
   },
   methods: {
@@ -190,16 +196,67 @@ export default {
       this.validatePassword(true)
 
       if (!this.errors.email && !this.errors.password) {
-        const email = 'user@example.com'
-        const password = '123456'
+        const storedUserData = JSON.parse(localStorage.getItem('users'))
+        if (storedUserData) {
+          const user = storedUserData.find(
+            (user) => user.email === this.formData.email && user.password === this.formData.password
+          )
 
-        if (this.formData.email === email && this.formData.password === password) {
-          const user = { email: this.formData.email, password: this.formData.password }
-          this.login(user).then(() => {
+          if (user) {
+            console.log('Login successful:', user)
             this.$router.push({ name: 'Home' })
-          })
+          } else {
+            console.log('Access Denied: Invalid email or password')
+            this.errors.email = 'Invalid email or password'
+            this.$router.push({ name: 'AccessDenied' })
+          }
         } else {
+          console.log('No user data found in localStorage')
           this.$router.push({ name: 'AccessDenied' })
+
+          // const handleLogin = () => {
+          //     const storedUser = userData.value;
+          //     if (storedUser.email === formData.value.email && storedUser.password === formData.value.password) {
+          //         // Login successful, handle user session
+          //     } else {
+          //         // Handle invalid login
+          //     }
+          // };
+
+          // const storedUser = JSON.parse(localStorage.getItem('user')) || {}
+          // const { email, password } = this.formData
+
+          // if (storedUser.email === email && storedUser.password === password) {
+          //   const user = { email, password }
+          //   this.login(user).then(() => {
+          //     this.$router.push({ name: 'Home' })
+          //   })
+          // } else {
+          //   this.errors.email = 'Invalid email or password'
+          // }
+
+          // const user = this.storedUsers.find(
+          //   (u) => u.email === this.formData.email && u.password === this.formData.password
+          // )
+          // if (user) {
+          //   this.login(user).then(() => {
+          //     this.$router.push({ name: 'Home' })
+          //   })
+          // } else {
+          //   this.errors.email = 'Invalid email or password'
+          // }
+
+          // const email = 'user@example.com'
+          // const password = '123456'
+
+          // if (this.formData.email === email && this.formData.password === password) {
+          //   const user = { email: this.formData.email, password: this.formData.password }
+          //   this.login(user).then(() => {
+          //     this.$router.push({ name: 'Home' })
+          //   })
+          // } else {
+          //   this.$router.push({ name: 'AccessDenied' })
+          // }
         }
       }
     }

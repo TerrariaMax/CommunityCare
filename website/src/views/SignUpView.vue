@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import useLocalStorage from '../store/useLocalStorage'
+
+const users = useLocalStorage([], 'users')
 
 const formData = ref({
   fullname: '',
@@ -57,7 +60,14 @@ const submitForm = () => {
 
   if (!errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
     console.log('Form submitted:', formData.value)
+
+    users.value.push({ ...formData.value })
+
+    // const storedData = window.localStorage.getItem('user')
+    // console.log('1.Stored data in localStorage:', storedData)
+
     clearForm()
+    // console.log('2.Stored data in localStorage:', storedData)
   }
 }
 
@@ -149,7 +159,7 @@ const clearForm = () => {
           </div>
 
           <div class="text-center">
-            <button type="submit" class="btn btn-primary me-2" @click="clearForm">Sign Up</button>
+            <button type="submit" class="btn btn-primary me-2">Sign Up</button>
             <!-- <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button> -->
           </div>
         </form>
