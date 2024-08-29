@@ -114,10 +114,14 @@
             </CDropdownMenu>
           </CDropdown>
           <router-link to="/login" class="ms-2">
-            <CButton type="submit" color="success" variant="outline">Login</CButton>
+            <CButton type="submit" color="success" variant="outline"
+              ><router-link to="/login" class="title" role="button">Login</router-link></CButton
+            >
           </router-link>
           <router-link to="/signup" class="ms-2">
-            <CButton type="submit" color="success" variant="outline">Sign-up</CButton>
+            <CButton type="submit" color="success" variant="outline"
+              ><router-link to="/sign-up" class="title" role="button">Sign-up</router-link></CButton
+            >
           </router-link>
         </CNavbarNav>
       </CCollapse>
