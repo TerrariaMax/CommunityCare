@@ -93,7 +93,11 @@
                 >
               </CDropdownItem>
               <CDropdownItem>
-                <router-link to="/join-us/work-with-us" class="title" active-class="active"
+                <router-link
+                  v-if="isAdmin"
+                  to="/join-us/work-with-us"
+                  class="title"
+                  active-class="active"
                   >Work With Us</router-link
                 >
               </CDropdownItem>
@@ -113,16 +117,21 @@
               <CDropdownItem href="#">Indonesia</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
-          <router-link to="/login" class="ms-2">
-            <CButton type="submit" color="success" variant="outline"
-              ><router-link to="/login" class="title" role="button">Login</router-link></CButton
-            >
+          <router-link v-if="!isAuthenticated" to="/login" class="ms-2">
+            <CButton type="submit" color="success" variant="outline">Login</CButton>
           </router-link>
-          <router-link to="/signup" class="ms-2">
-            <CButton type="submit" color="success" variant="outline"
-              ><router-link to="/sign-up" class="title" role="button">Sign-up</router-link></CButton
-            >
+          <router-link v-if="!isAuthenticated" to="/sign-up" class="ms-2">
+            <CButton type="submit" color="success" variant="outline">Sign-up</CButton>
           </router-link>
+          <CButton
+            v-if="isAuthenticated"
+            @click="handleLogout"
+            type="submit"
+            color="success"
+            variant="outline"
+            class="ms-2"
+            >Log out</CButton
+          >
         </CNavbarNav>
       </CCollapse>
     </CContainer>
@@ -131,6 +140,9 @@
 
 <script>
 import { ref } from 'vue'
+import { mapState, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
+
 import {
   CNavbar,
   CContainer,
@@ -173,6 +185,22 @@ export default {
     const visible = ref(false)
     return {
       visible
+    }
+  },
+  computed: {
+    ...mapState(['isAuthenticated']), // Maps `isAuthenticated` from the Vuex store to be accessible in your component
+    ...mapGetters(['userRole']),
+    isAdmin() {
+      return this.userRole === 'Admin'
+    }
+  },
+  methods: {
+    ...mapActions(['logout']), // Maps the Vuex logout action
+    handleLogout() {
+      if (window.confirm('Are you sure you want to log out?')) {
+        this.logout() // Call the logout action
+        this.$router.push({ name: 'Login' }) // Redirect to the login page
+      }
     }
   }
 }

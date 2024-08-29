@@ -14,9 +14,6 @@ export default createStore({
     }
   },
   actions: {
-    signUp({ commit }, user) {
-      commit('setUser', user)
-    },
     login({ commit }, user) {
       commit('setAuthentication', true)
       commit('setUser', user)
@@ -25,5 +22,8 @@ export default createStore({
       commit('setAuthentication', false)
       commit('setUser', null)
     }
+  },
+  getters: {
+    userRole: (state) => (state.user ? state.user.role : null)
   }
 })

@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import useLocalStorage from '../store/useLocalStorage'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const users = useLocalStorage([], 'users')
 
@@ -10,7 +13,7 @@ const formData = ref({
   password: '',
   confirmPassword: '',
   gender: '',
-  mobileNumber: ''
+  role: ''
 })
 
 const errors = ref({
@@ -19,8 +22,10 @@ const errors = ref({
   password: null,
   confirmPassword: null,
   gender: null,
-  mobileNumber: null
+  role: null
 })
+
+const roles = ref(['User', 'Admin'])
 
 const validateEmail = (blur) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -53,21 +58,33 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
+const validateRole = (blur) => {
+  if (!formData.value.role) {
+    if (blur) errors.value.role = 'Role is required.'
+  } else {
+    errors.value.role = null
+  }
+}
+
 const submitForm = () => {
   validateEmail(true)
   validatePassword(true)
   validateConfirmPassword(true)
+  validateRole(true)
 
-  if (!errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
+  if (
+    !errors.value.email &&
+    !errors.value.password &&
+    !errors.value.confirmPassword &&
+    !errors.value.role
+  ) {
     console.log('Form submitted:', formData.value)
 
     users.value.push({ ...formData.value })
-
     // const storedData = window.localStorage.getItem('user')
-    // console.log('1.Stored data in localStorage:', storedData)
-
+    // console.log('Stored data in localStorage:', storedData)
     clearForm()
-    // console.log('2.Stored data in localStorage:', storedData)
+    router.push({ name: 'Login' })
   }
 }
 
@@ -78,7 +95,7 @@ const clearForm = () => {
     password: '',
     confirmPassword: '',
     gender: '',
-    mobileNumber: ''
+    role: ''
   }
 }
 </script>
@@ -96,7 +113,7 @@ const clearForm = () => {
             </div>
 
             <div class="col-md-6">
-              <label for="email" class="form-label">Email Address</label>
+              <label for="email" class="form-label">Email Address *</label>
               <input
                 type="email"
                 class="form-control"
@@ -111,7 +128,7 @@ const clearForm = () => {
 
           <div class="row mb-4">
             <div class="col-md-6">
-              <label for="password" class="form-label">Password</label>
+              <label for="password" class="form-label">Password *</label>
               <input
                 type="password"
                 class="form-control"
@@ -123,7 +140,7 @@ const clearForm = () => {
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
             <div class="col-md-6">
-              <label for="confirm-password" class="form-label">Re-enter Password</label>
+              <label for="confirm-password" class="form-label">Re-enter Password *</label>
               <input
                 type="password"
                 class="form-control"
@@ -148,13 +165,12 @@ const clearForm = () => {
               </select>
             </div>
             <div class="col-md-6">
-              <label for="mobileNumber" class="form-label">Mobile Number</label>
-              <input
-                type="text"
-                class="form-control"
-                id="mobileNumber"
-                v-model="formData.mobileNumber"
-              />
+              <label for="role" class="form-label">Role *</label>
+              <select class="form-select" id="role" v-model="formData.role">
+                <option value=""></option>
+                <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
+              </select>
+              <div v-if="errors.role" class="text-danger">{{ errors.role }}</div>
             </div>
           </div>
 
