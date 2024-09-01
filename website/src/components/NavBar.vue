@@ -93,22 +93,23 @@
                 >
               </CDropdownItem>
               <CDropdownItem>
-                <router-link
-                  v-if="isAdmin"
-                  to="/join-us/work-with-us"
-                  class="title"
-                  active-class="active"
+                <router-link to="/join-us/work-with-us" class="title" active-class="active"
                   >Work With Us</router-link
                 >
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
+          <CNavItem>
+            <CNavLink href="/admin" active> Admin </CNavLink>
+            <!-- v-if="isAdmin" -->
+            <!-- <router-link to="/admin" class="title" active-class="active">Admin </router-link> -->
+          </CNavItem>
         </CNavbarNav>
 
         <CNavbarNav class="ms-auto">
-          <CForm class="d-flex">
+          <!-- <CForm class="d-flex">
             <CFormInput type="search" class="me-2" placeholder="Search" />
-          </CForm>
+          </CForm> -->
           <CDropdown variant="nav-item" :popper="false" class="ms-2">
             <CDropdownToggle color="secondary">Lang</CDropdownToggle>
             <CDropdownMenu>

@@ -13,9 +13,14 @@
   "dependencies": {
     "@coreui/vue": "^5.2.0",
     "@primevue/themes": "^4.0.5",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue": "^1.5.1",
+    "bootstrap-vue-3": "^0.3.12",
+    "bootstrap-vue-next": "^0.24.11",
     "primevue": "^4.0.5",
-    "vue": "^3.4.29",
+    "vue": "^3.4.38",
     "vue-router": "^4.4.3",
+    "vue-star-rating": "^2.1.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

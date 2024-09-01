@@ -15,6 +15,7 @@ import FAQ from '../subviews/FAQ.vue'
 import JoinUsView from '../views/JoinUsView.vue'
 import Volunteer from '../subviews/Volunteer.vue'
 import Work from '../subviews/Work.vue'
+import AdminView from '../views/AdminView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import AccessDenied from '../views/AccessDenied.vue'
@@ -108,6 +109,11 @@ const routes = [
         component: Work
       }
     ]
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminView
   },
   {
     path: '/login',
