@@ -100,9 +100,9 @@
             </CDropdownMenu>
           </CDropdown>
           <CNavItem>
-            <CNavLink href="/admin" active> Admin </CNavLink>
-            <!-- v-if="isAdmin" -->
-            <!-- <router-link to="/admin" class="title" active-class="active">Admin </router-link> -->
+            <router-link v-if="isAdmin" to="/admin" class="title" active-class="active"
+              >Admin</router-link
+            >
           </CNavItem>
         </CNavbarNav>
 

@@ -1,10 +1,7 @@
 <template>
   <div class="text-center">
     <h1>Preventing Violence</h1>
-    <p>
-      Welcome to our digital library! We're dedicated to providing a vast collection of books and
-      resources to our community.
-    </p>
+    <p></p>
   </div>
 </template>
 

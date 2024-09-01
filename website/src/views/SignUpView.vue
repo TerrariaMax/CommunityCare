@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import useLocalStorage from '../store/useLocalStorage'
 import { useRouter } from 'vue-router'
+import useLocalStorage from '../store/useLocalStorage'
 
 const router = useRouter()
 
@@ -66,23 +66,51 @@ const validateRole = (blur) => {
   }
 }
 
+const validateFullName = (blur) => {
+  if (!formData.value.fullname.trim()) {
+    if (blur) errors.value.fullname = 'Full Name is required.'
+  } else {
+    errors.value.fullname = null
+  }
+}
+
+const sanitizeInput = (input) => {
+  return input.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
 const submitForm = () => {
+  validateFullName(true)
   validateEmail(true)
   validatePassword(true)
   validateConfirmPassword(true)
   validateRole(true)
 
   if (
+    !errors.value.fullname &&
     !errors.value.email &&
     !errors.value.password &&
     !errors.value.confirmPassword &&
     !errors.value.role
   ) {
-    console.log('Form submitted:', formData.value)
+    const existingUser = users.value.find((user) => user.email === formData.value.email)
+    if (existingUser) {
+      errors.value.email = 'Email is already registered.'
+      return
+    }
 
-    users.value.push({ ...formData.value })
-    // const storedData = window.localStorage.getItem('user')
-    // console.log('Stored data in localStorage:', storedData)
+    // Sanitize inputs before saving
+    const sanitizedData = {
+      fullname: sanitizeInput(formData.value.fullname),
+      email: sanitizeInput(formData.value.email),
+      password: sanitizeInput(formData.value.password),
+      confirmPassword: sanitizeInput(formData.value.confirmPassword),
+      gender: sanitizeInput(formData.value.gender),
+      role: sanitizeInput(formData.value.role)
+    }
+
+    console.log('Form submitted:', sanitizedData)
+
+    users.value.push(sanitizedData)
     clearForm()
     router.push({ name: 'Login' })
   }
@@ -108,8 +136,16 @@ const clearForm = () => {
         <form @submit.prevent="submitForm">
           <div class="row mb-4">
             <div class="col-md-6">
-              <label for="fullname" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="fullname" v-model="formData.fullname" />
+              <label for="fullname" class="form-label">Full Name *</label>
+              <input
+                type="text"
+                class="form-control"
+                id="fullname"
+                v-model="formData.fullname"
+                @input="() => validateFullName(false)"
+                @blur="() => validateFullName(true)"
+              />
+              <div v-if="errors.fullname" class="text-danger">{{ errors.fullname }}</div>
             </div>
 
             <div class="col-md-6">
@@ -176,7 +212,6 @@ const clearForm = () => {
 
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Sign Up</button>
-            <!-- <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button> -->
           </div>
         </form>
       </div>
@@ -184,50 +219,19 @@ const clearForm = () => {
   </div>
 </template>
 
-<!-- <style scoped>
-.form-label {
-  font-weight: bold;
-}
-
-.form-control {
-  padding: 10px;
-}
-
-.row.mb-4 {
-  margin-bottom: 1.5rem;
-}
-
+<style scoped>
+/* Additional styling for the form */
 #fullname:focus,
 #email:focus,
 #password:focus,
 #confirm-password:focus,
-#mobileNumber:focus {
+#gender:focus,
+#role:focus {
   border-color: #275fda;
   box-shadow: 0 0 5px rgba(39, 95, 218, 0.5);
 }
 
 .text-danger {
   color: #dc3545;
-}
-</style> -->
-
-<style scoped>
-/* ID selectors */
-#username:focus,
-#password:focus,
-#isAustralian:focus,
-.card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.card-header {
-  background-color: #275fda;
-  color: white;
-  padding: 10px;
-  border-radius: 10px 10px 0 0;
-}
-.list-group-item {
-  padding: 10px;
 }
 </style>
