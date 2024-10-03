@@ -94,72 +94,62 @@ export default {
       this.validateEmail(true)
       this.validatePassword(true)
 
-      if (!this.errors.email && !this.errors.password) {
-        const storedUserData = JSON.parse(localStorage.getItem('users'))
-        if (storedUserData) {
-          const user = storedUserData.find(
-            (user) => user.email === this.formData.email && user.password === this.formData.password
-          )
+      const adminUser = {
+        fullname: 'Admin',
+        email: 'admin@gmail.com',
+        password: '123456',
+        role: 'Admin'
+      }
 
-          if (user) {
-            console.log('Login successful:', user)
-            this.login(user).then(() => {
-              this.$router.push({ name: 'Home' })
-            })
-            // this.$router.push({ name: 'Home' })
-          } else {
-            console.log('Access Denied: Invalid email or password')
-            this.errors.email = 'Invalid email or password'
-          }
-        } else {
-          this.errors.email = 'Not registered.'
+      const storedUserData = JSON.parse(localStorage.getItem('users')) || []
 
-          // const handleLogin = () => {
-          //     const storedUser = userData.value;
-          //     if (storedUser.email === formData.value.email && storedUser.password === formData.value.password) {
-          //         // Login successful, handle user session
-          //     } else {
-          //         // Handle invalid login
-          //     }
-          // };
+      if (!storedUserData.some((user) => user.email === adminUser.email)) {
+        storedUserData.push(adminUser)
+        localStorage.setItem('users', JSON.stringify(storedUserData))
+      }
 
-          // const storedUser = JSON.parse(localStorage.getItem('user')) || {}
-          // const { email, password } = this.formData
+      const user = storedUserData.find(
+        (user) => user.email === this.formData.email && user.password === this.formData.password
+      )
 
-          // if (storedUser.email === email && storedUser.password === password) {
-          //   const user = { email, password }
-          //   this.login(user).then(() => {
-          //     this.$router.push({ name: 'Home' })
-          //   })
-          // } else {
-          //   this.errors.email = 'Invalid email or password'
-          // }
-
-          // const user = this.storedUsers.find(
-          //   (u) => u.email === this.formData.email && u.password === this.formData.password
-          // )
-          // if (user) {
-          //   this.login(user).then(() => {
-          //     this.$router.push({ name: 'Home' })
-          //   })
-          // } else {
-          //   this.errors.email = 'Invalid email or password'
-          // }
-
-          // const email = 'user@example.com'
-          // const password = '123456'
-
-          // if (this.formData.email === email && this.formData.password === password) {
-          //   const user = { email: this.formData.email, password: this.formData.password }
-          //   this.login(user).then(() => {
-          //     this.$router.push({ name: 'Home' })
-          //   })
-          // } else {
-          //
-          // }
-        }
+      if (user) {
+        console.log('Login successful:', user)
+        this.login(user).then(() => {
+          this.$router.push({ name: 'Home' })
+        })
+      } else {
+        console.log('Access Denied: Invalid email or password')
+        this.errors.email = 'Invalid email or password'
       }
     }
+
+    // handleLogin() {
+    //   this.validateEmail(true)
+    //   this.validatePassword(true)
+
+    //   if (!this.errors.email && !this.errors.password) {
+    //     const storedUserData = JSON.parse(localStorage.getItem('users'))
+    //     if (storedUserData) {
+    //       const user = storedUserData.find(
+    //         (user) => user.email === this.formData.email && user.password === this.formData.password
+    //       )
+
+    //       if (user) {
+    //         console.log('Login successful:', user)
+    //         this.login(user).then(() => {
+    //           this.$router.push({ name: 'Home' })
+    //         })
+    //         // this.$router.push({ name: 'Home' })
+    //       } else {
+    //         console.log('Access Denied: Invalid email or password')
+    //         this.errors.email = 'Invalid email or password'
+    //       }
+    //     } else {
+    //       this.errors.email = 'Not registered.'
+
+    //     }
+    //   }
+    // }
   }
 }
 </script>

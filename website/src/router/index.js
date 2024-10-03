@@ -20,6 +20,8 @@ import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import AccessDenied from '../views/AccessDenied.vue'
 import store from '../store/store'
+import FirebaseRegisterView from '@/views/FirebaseRegisterView.vue'
+import FirebaseSigninView from '@/views/FirebaseSigninView.vue'
 
 const routes = [
   {
@@ -118,13 +120,23 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: FirebaseSigninView
   },
   {
     path: '/sign-up',
     name: 'SignUp',
-    component: SignUpView
+    component: FirebaseRegisterView
   },
+  // {
+  //   path: '/login',
+  //   name: 'Login',
+  //   component: LoginView
+  // },
+  // {
+  //   path: '/sign-up',
+  //   name: 'SignUp',
+  //   component: SignUpView
+  // },
   {
     path: '/access-denied',
     name: 'AccessDenied',

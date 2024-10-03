@@ -1,11 +1,3 @@
-<!-- <template>
-  <div class="text-center">
-    <h1>Our Services</h1>
-
-    <router-view />
-  </div>
-</template> -->
-
 <template>
   <div class="container mt-5">
     <div class="row">
@@ -31,18 +23,23 @@
               class="form-control"
               rows="3"
               placeholder="Write your review here"
+              :disabled="hasReviewed"
             ></textarea>
           </div>
 
           <button
             type="submit"
             class="btn btn-primary"
-            :class="{ 'btn-secondary': !isAuthenticated }"
-            :disabled="!isAuthenticated"
+            :class="{ 'btn-secondary': !isAuthenticated || hasReviewed }"
+            :disabled="!isAuthenticated || hasReviewed"
           >
             Submit
           </button>
         </form>
+
+        <!-- <div v-if="hasReviewed" class="alert alert-info mt-3 text-center">
+          You have already submitted a review.
+        </div> -->
 
         <div class="mt-4">
           <h3 class="text-center">Average Rating: {{ averageRating }}</h3>
@@ -75,12 +72,14 @@ export default {
       review: ''
     })
 
-    // Load reviews from local storage on mount
     onMounted(() => {
       store.dispatch('loadReviews')
     })
 
     const submitReview = () => {
+      // Prevent user from submitting multiple reviews
+      if (hasReviewed.value) return
+
       const review = {
         ...newReview.value,
         username: store.getters.username,
@@ -91,12 +90,17 @@ export default {
       newReview.value.review = ''
     }
 
+    const hasReviewed = computed(() => {
+      return store.getters.reviews.some((review) => review.username === store.getters.username)
+    })
+
     return {
       newReview,
       submitReview,
       reviews: computed(() => store.getters.reviews),
       averageRating: computed(() => store.getters.averageRating),
-      isAuthenticated: computed(() => store.state.isAuthenticated)
+      isAuthenticated: computed(() => store.state.isAuthenticated),
+      hasReviewed
     }
   }
 }

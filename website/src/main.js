@@ -1,6 +1,10 @@
 // import './assets/main.css'
 // import '@/assets/style.css'
 
+// import '@/assets/css/materialize.min.css'
+// import '@/assets/js/materialize.min.js'
+// import 'material-icons/iconfont/material-icons.css'
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { createApp } from 'vue'
@@ -11,6 +15,20 @@ import useLocalStorage from './store/useLocalStorage'
 import Rating from 'primevue/rating'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
+// import { initializeApp } from 'firebase/app'
+
+// // Your web app's Firebase configuration
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyDh5N8DPg99pLZUiJL63w5XC4YCEGa-N84',
+//   authDomain: 'communitycare-5ca3a.firebaseapp.com',
+//   projectId: 'communitycare-5ca3a',
+//   storageBucket: 'communitycare-5ca3a.appspot.com',
+//   messagingSenderId: '772383040794',
+//   appId: '1:772383040794:web:ab7fcacce0e038a99678a3'
+// }
+
+// // Initialize Firebase
+// initializeApp(firebaseConfig)
 
 // import DataTable from 'primevue/datatable'
 // import Column from 'primevue/Column'

@@ -189,18 +189,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isAuthenticated']), // Maps `isAuthenticated` from the Vuex store to be accessible in your component
+    ...mapState(['isAuthenticated']),
     ...mapGetters(['userRole']),
     isAdmin() {
       return this.userRole === 'Admin'
     }
   },
   methods: {
-    ...mapActions(['logout']), // Maps the Vuex logout action
+    ...mapActions(['logout']),
     handleLogout() {
       if (window.confirm('Are you sure you want to log out?')) {
-        this.logout() // Call the logout action
-        this.$router.push({ name: 'Login' }) // Redirect to the login page
+        this.logout()
+        this.$router.push({ name: 'Login' })
       }
     }
   }

@@ -13,7 +13,8 @@ const formData = ref({
   password: '',
   confirmPassword: '',
   gender: '',
-  role: ''
+  phone: '',
+  role: 'User'
 })
 
 const errors = ref({
@@ -22,10 +23,8 @@ const errors = ref({
   password: null,
   confirmPassword: null,
   gender: null,
-  role: null
+  phone: null
 })
-
-const roles = ref(['User', 'Admin'])
 
 const validateEmail = (blur) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -58,19 +57,24 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
-const validateRole = (blur) => {
-  if (!formData.value.role) {
-    if (blur) errors.value.role = 'Role is required.'
-  } else {
-    errors.value.role = null
-  }
-}
-
 const validateFullName = (blur) => {
   if (!formData.value.fullname.trim()) {
     if (blur) errors.value.fullname = 'Full Name is required.'
   } else {
     errors.value.fullname = null
+  }
+}
+
+const validatePhone = (blur) => {
+  if (formData.value.phone) {
+    const phonePattern = /^[0-9]{10,12}$/ //
+    if (!phonePattern.test(formData.value.phone)) {
+      if (blur) errors.value.phone = 'Invalid phone number. Must be 10-12 digits.'
+    } else {
+      errors.value.phone = null
+    }
+  } else {
+    errors.value.phone = null
   }
 }
 
@@ -83,14 +87,14 @@ const submitForm = () => {
   validateEmail(true)
   validatePassword(true)
   validateConfirmPassword(true)
-  validateRole(true)
+  validatePhone(true)
 
   if (
     !errors.value.fullname &&
     !errors.value.email &&
     !errors.value.password &&
     !errors.value.confirmPassword &&
-    !errors.value.role
+    !errors.value.phone
   ) {
     const existingUser = users.value.find((user) => user.email === formData.value.email)
     if (existingUser) {
@@ -98,14 +102,14 @@ const submitForm = () => {
       return
     }
 
-    // Sanitize inputs before saving
     const sanitizedData = {
       fullname: sanitizeInput(formData.value.fullname),
       email: sanitizeInput(formData.value.email),
       password: sanitizeInput(formData.value.password),
       confirmPassword: sanitizeInput(formData.value.confirmPassword),
       gender: sanitizeInput(formData.value.gender),
-      role: sanitizeInput(formData.value.role)
+      phone: sanitizeInput(formData.value.phone),
+      role: 'User'
     }
 
     console.log('Form submitted:', sanitizedData)
@@ -123,7 +127,8 @@ const clearForm = () => {
     password: '',
     confirmPassword: '',
     gender: '',
-    role: ''
+    phone: '',
+    role: 'User'
   }
 }
 </script>
@@ -201,12 +206,16 @@ const clearForm = () => {
               </select>
             </div>
             <div class="col-md-6">
-              <label for="role" class="form-label">Role *</label>
-              <select class="form-select" id="role" v-model="formData.role">
-                <option value=""></option>
-                <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
-              </select>
-              <div v-if="errors.role" class="text-danger">{{ errors.role }}</div>
+              <label for="phone" class="form-label">Phone</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone"
+                v-model="formData.phone"
+                @input="() => validatePhone(false)"
+                @blur="() => validatePhone(true)"
+              />
+              <div v-if="errors.phone" class="text-danger">{{ errors.phone }}</div>
             </div>
           </div>
 
