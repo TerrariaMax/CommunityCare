@@ -91,22 +91,19 @@
       </div>
     </div>
   </div>
-
-  <!-- <h1>Create an Account</h1> -->
-  <!-- <p><input type="text" placeholder="Email" v-model="email" /></p>
-  <p><input type="password" placeholder="Password" v-model="password" /></p> -->
-  <!-- <p><button @click="register">Save to Firebase</button></p> -->
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
-import useLocalStorage from '../store/useLocalStorage'
+// import useLocalStorage from '../store/useLocalStorage'
+// import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 const router = useRouter()
-
-const users = useLocalStorage([], 'users')
+const auth = getAuth()
+// const db = getFirestore()
+// const users = useLocalStorage([], 'users')
 
 const formData = ref({
   fullname: '',
@@ -159,8 +156,11 @@ const validateConfirmPassword = (blur) => {
 }
 
 const validateFullName = (blur) => {
+  const fullNameRegex = /^[A-Za-z\s_]+$/
   if (!formData.value.fullname.trim()) {
     if (blur) errors.value.fullname = 'Full Name is required.'
+  } else if (!fullNameRegex.test(formData.value.fullname.trim())) {
+    errors.value.fullname = 'Full Name can only contain letters, spaces, and underscores.'
   } else {
     errors.value.fullname = null
   }
@@ -233,20 +233,50 @@ const clearForm = () => {
   }
 }
 
-const auth = getAuth()
 const register = () => {
-  createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
-      console.log('Successful Registered!')
-      router.push({ name: 'Login' })
+  const { email, password, fullname, gender, phone, role } = formData.value
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user
+
+      //Save additional user info in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        fullname,
+        email,
+        gender,
+        phone,
+        role
+      })
+
+      // await addDoc()
+
+      console.log('User registered and data saved in Firestore!')
+      router.push({ name: 'Login' }) // Redirect to login after registration
     })
     .catch((error) => {
-      console.log(error.code)
+      console.error('Error during registration:', error.code)
     })
-}
-</script>
 
-<!-- <template>
+  return {
+    formData,
+    register
+  }
+}
+
+// const register = () => {
+//   createUserWithEmailAndPassword(auth, email.value, password.value)
+//     .then((data) => {
+//       console.log('Successful Registered!')
+//       router.push({ name: 'Login' })
+//     })
+//     .catch((error) => {
+//       console.log(error.code)
+//     })
+// }
+</script>
+<!-- 
+<template>
   <h1>Create an Account</h1>
   <p><input type="text" placeholder="Email" v-model="email" /></p>
   <p><input type="password" placeholder="Password" v-model="password" /></p>
@@ -264,7 +294,7 @@ const auth = getAuth()
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((data) => {
-      console.log('Successful Registered!')
+      console.log('Firebase Register Successful!')
       router.push({ name: 'Login' })
     })
     .catch((error) => {

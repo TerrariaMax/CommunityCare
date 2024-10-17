@@ -23,6 +23,17 @@
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
         <li class="nav-item">
+          <router-link to="/about" class="title" active-class="active">Add Book </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/resources" class="title" active-class="active"
+            >Get Book Count
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/join-us" class="title" active-class="active">Weather </router-link>
+        </li>
+        <!-- <li class="nav-item">
           <router-link to="/" class="nav-link" active-class="active" aria-current="page">
             Home (Week 5)
           </router-link>
@@ -41,7 +52,7 @@
           <button v-if="isAuthenticated" @click="handleLogout" class="btn btn-link nav-link">
             Logout
           </button>
-        </li>
+        </li> -->
       </ul>
     </header>
   </div>

@@ -4,6 +4,18 @@
       <CNavbarBrand>
         <router-link to="/" class="title" role="button">Community Care</router-link>
       </CNavbarBrand>
+      <!-- <CNavItem>
+        <router-link to="/about" class="title" active-class="active">Add Book </router-link>
+      </CNavItem>
+      <CNavItem>
+        <router-link to="/resources" class="title" active-class="active"
+          >Get Book Count
+        </router-link>
+      </CNavItem>
+      <CNavItem>
+        <router-link to="/join-us" class="title" active-class="active">Weather </router-link>
+      </CNavItem> -->
+
       <CNavbarToggler @click="visible = !visible" />
       <CCollapse class="navbar-collapse navbar-custom" :visible="visible">
         <CNavbarNav class="responsive-col">
@@ -107,9 +119,6 @@
         </CNavbarNav>
 
         <CNavbarNav class="ms-auto">
-          <!-- <CForm class="d-flex">
-            <CFormInput type="search" class="me-2" placeholder="Search" />
-          </CForm> -->
           <CDropdown variant="nav-item" :popper="false" class="ms-2">
             <CDropdownToggle color="secondary">Lang</CDropdownToggle>
             <CDropdownMenu>

@@ -6,17 +6,43 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
+  <div class="main-container">
+    <header v-if="showHeader">
+      <NavBar />
+    </header>
+    <main class="main-box">
+      <router-view></router-view>
+    </main>
+  </div>
+</template>
+
+<script>
+import NavBar from './components/NavBar.vue'
+import CountBookAPI from './views/CountBookAPI.vue'
+
+export default {
+  name: 'App',
+  components: {
+    NavBar,
+    CountBookAPI
+  },
+  computed: {
+    showHeader() {
+      return this.$route.name !== 'CountBookAPI'
+    }
+  }
+}
+</script>
+
+<!-- <template>
   <header>
     <NavBar />
-    <!-- <BHeader /> -->
   </header>
 
   <main class="container">
-    <!-- <LibraryRegistrationForm /> -->
-    <!-- <JSONLab /> -->
     <router-view></router-view>
   </main>
-</template>
+</template> -->
 
 <style>
 /* Class selectors */
