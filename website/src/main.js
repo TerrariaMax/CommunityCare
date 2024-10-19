@@ -13,8 +13,8 @@ import router from './router'
 import store from './store/store'
 import useLocalStorage from './store/useLocalStorage'
 import Rating from 'primevue/rating'
-import CoreuiVue from '@coreui/vue'
-import '@coreui/coreui/dist/css/coreui.min.css'
+// import CoreuiVue from '@coreui/vue'
+// import '@coreui/coreui/dist/css/coreui.min.css'
 
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
@@ -40,7 +40,7 @@ const app = createApp(App)
 app.use(PrimeVue, { theme: { preset: Aura } })
 app.use(router)
 app.use(store)
-app.use(CoreuiVue)
+// app.use(CoreuiVue)
 
 // app.component('DataTable', DataTable)
 // app.component('Column', Column)
