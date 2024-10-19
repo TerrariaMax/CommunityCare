@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h1>Interactive Tables</h1>
 
@@ -44,7 +44,7 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <!-- <script setup>
 import { ref } from 'vue'
@@ -310,9 +310,8 @@ const toggleDetails = (item) => {
   </CSmartTable>
 </template> -->
 
-<!-- <template>
+<template>
   <div class="container">
-    
     <div class="header">
       <h1>WEATHER APP</h1>
       <div class="search-bar">
@@ -322,21 +321,16 @@ const toggleDetails = (item) => {
     </div>
 
     <main>
-
       <div v-if="weatherData">
-
         <h2>{{ weatherData.name }}, {{ weatherData.sys.country }}</h2>
 
         <div>
-
           <img :src="iconUrl" alt="Weather Icon" />
           <p>{{ temperature }} °C</p>
         </div>
 
-
         <span>{{ weatherData.weather[0].description }}</span>
       </div>
-
 
       <p v-if="error">{{ error }}</p>
     </main>
@@ -421,7 +415,7 @@ export default {
 
 <style></style>
 
-<template>
+<!--<template>
   <div class="text-center">
     <h1>Join Us</h1>
     <p></p>
