@@ -1,6 +1,6 @@
 {
   "name": "website",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@coreui/vue": "^5.2.0",
+    "@coreui/vue": "^5.4.0",
     "@primevue/themes": "^4.0.5",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
@@ -39,5 +39,20 @@
     "prettier": "^3.2.5",
     "vite": "^5.3.1",
     "vite-plugin-vue-devtools": "^7.3.1"
-  }
+  },
+  "description": "NA",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TerrariaMax/CommunityCare.git"
+  },
+  "keywords": [
+    "healthcare"
+  ],
+  "author": "Moana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TerrariaMax/CommunityCare/issues"
+  },
+  "homepage": "https://github.com/TerrariaMax/CommunityCare#readme"
 }
