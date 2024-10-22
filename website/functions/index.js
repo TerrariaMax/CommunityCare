@@ -40,24 +40,41 @@ exports.countBooks = onRequest((req, res) => {
   });
 });
 
-exports.displayBooks = onRequest((req, res) => {
+// exports.displayBooks = onRequest((req, res) => {
+//   cors(req, res, async () => {
+//     try {
+//       const booksCollection = admin.firestore().collection("books");
+//       const snapshot = await booksCollection.get();
+//       const books = [];
+
+//       snapshot.forEach((doc) => {
+//         books.push({
+//           id: doc.id,
+//           ...doc.data(),
+//         });
+//       });
+
+//       res.status(200).send(books);
+//     } catch (error) {
+//       console.error("Error displaying books:", error.message);
+//       res.status(500).send("Error displaying books");
+//     }
+//   });
+// });
+
+// Count reviews function
+exports.countReviews = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
-      const booksCollection = admin.firestore().collection("books");
-      const snapshot = await booksCollection.get();
-      const books = [];
+      const reviewsCollection = admin.firestore().collection("reviews");
+      // Change "reviews" to your actual collection name
+      const snapshot = await reviewsCollection.get();
+      const count = snapshot.size;
 
-      snapshot.forEach((doc) => {
-        books.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-
-      res.status(200).send(books);
+      res.status(200).send({count});
     } catch (error) {
-      console.error("Error displaying books:", error.message);
-      res.status(500).send("Error displaying books");
+      console.error("Error counting reviews:", error.message);
+      res.status(500).send("Error counting reviews");
     }
   });
 });

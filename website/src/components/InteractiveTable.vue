@@ -102,27 +102,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-.table-controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.pagination {
-  margin-top: 10px;
-}
-</style>

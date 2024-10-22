@@ -112,7 +112,7 @@
             </CDropdownMenu>
           </CDropdown>
           <CNavItem>
-            <router-link v-if="isAdmin" to="/admin" class="title" active-class="active"
+            <router-link v-if="isAdmin" to="/admin" color="secondary" class="title"
               >Admin</router-link
             >
           </CNavItem>
@@ -127,14 +127,14 @@
               <CDropdownItem href="#">Indonesia</CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
-          <router-link v-if="!isAuthenticated" to="/login" class="ms-2">
+          <router-link v-if="isAuthenticated" to="/login" class="ms-2">
             <CButton type="submit" color="success" variant="outline">Login</CButton>
           </router-link>
-          <router-link v-if="!isAuthenticated" to="/sign-up" class="ms-2">
+          <router-link v-if="isAuthenticated" to="/sign-up" class="ms-2">
             <CButton type="submit" color="success" variant="outline">Sign-up</CButton>
           </router-link>
           <CButton
-            v-if="isAuthenticated"
+            v-if="!isAuthenticated"
             @click="handleLogout"
             type="submit"
             color="success"
@@ -149,6 +149,99 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue'
+import { mapState, mapActions } from 'vuex'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import db from '../firebase/init.js' // Adjust the path as necessary
+
+import {
+  CNavbar,
+  CContainer,
+  CNavbarBrand,
+  CNavbarToggler,
+  CCollapse,
+  CNavbarNav,
+  CNavItem,
+  CNavLink,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownDivider,
+  CForm,
+  CFormInput,
+  CButton
+} from '@coreui/vue'
+
+export default {
+  components: {
+    CNavbar,
+    CContainer,
+    CNavbarBrand,
+    CNavbarToggler,
+    CCollapse,
+    CNavbarNav,
+    CNavItem,
+    CNavLink,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
+    CDropdownDivider,
+    CForm,
+    CFormInput,
+    CButton
+  },
+  setup() {
+    const visible = ref(false)
+    const isAuthenticated = ref(false)
+    const auth = getAuth()
+    const userRole = ref('') // To store the user's role
+
+    // Check the authentication state and fetch user role
+    onMounted(async () => {
+      onAuthStateChanged(auth, async (currentUser) => {
+        console.log('Current User:', currentUser)
+        if (currentUser) {
+          // isAuthenticated.value = true
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid))
+          if (userDoc.exists()) {
+            userRole.value = userDoc.data().role // Get the user's role
+          }
+        } else {
+          // isAuthenticated.value = false
+          userRole.value = '' // Reset role if user is logged out
+          console.log('isAuthenticated:', isAuthenticated.value)
+        }
+      })
+    })
+
+    return {
+      visible,
+      userRole,
+      isAuthenticated
+    }
+  },
+  computed: {
+    ...mapState(['isAuthenticated']),
+    isAdmin() {
+      return this.userRole === 'Admin' // Adjust based on your Firestore data
+    }
+  },
+  methods: {
+    ...mapActions(['logout']),
+    handleLogout() {
+      if (window.confirm('Are you sure you want to log out?')) {
+        this.logout()
+        this.$router.push({ name: 'Login' })
+      }
+    }
+  }
+}
+</script>
+
+<!-- <script>
 import { ref } from 'vue'
 import { mapState, mapActions } from 'vuex'
 import { mapGetters } from 'vuex'
@@ -214,7 +307,7 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <style scoped>
 .title {

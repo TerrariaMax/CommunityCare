@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center">📝 Sign Up</h1>
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="submitForm" @keydown.enter="handleEnter">
           <div class="row mb-4">
             <div class="col-md-6">
               <label for="fullname" class="form-label">Full Name *</label>
@@ -12,12 +12,11 @@
                 class="form-control"
                 id="fullname"
                 v-model="formData.fullname"
-                @input="() => validateFullName(false)"
-                @blur="() => validateFullName(true)"
+                @input="validateFullName(false)"
+                @blur="validateFullName(true)"
               />
               <div v-if="errors.fullname" class="text-danger">{{ errors.fullname }}</div>
             </div>
-
             <div class="col-md-6">
               <label for="email" class="form-label">Email Address *</label>
               <input
@@ -25,8 +24,8 @@
                 class="form-control"
                 id="email"
                 v-model="formData.email"
-                @input="() => validateEmail(false)"
-                @blur="() => validateEmail(true)"
+                @input="validateEmail(false)"
+                @blur="validateEmail(true)"
               />
               <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
             </div>
@@ -40,8 +39,8 @@
                 class="form-control"
                 id="password"
                 v-model="formData.password"
-                @input="() => validatePassword(false)"
-                @blur="() => validatePassword(true)"
+                @input="validatePassword(false)"
+                @blur="validatePassword(true)"
               />
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
@@ -52,8 +51,8 @@
                 class="form-control"
                 id="confirm-password"
                 v-model="formData.confirmPassword"
-                @input="() => validateConfirmPassword(false)"
-                @blur="() => validateConfirmPassword(true)"
+                @input="validateConfirmPassword(false)"
+                @blur="validateConfirmPassword(true)"
               />
               <div v-if="errors.confirmPassword" class="text-danger">
                 {{ errors.confirmPassword }}
@@ -77,15 +76,15 @@
                 class="form-control"
                 id="phone"
                 v-model="formData.phone"
-                @input="() => validatePhone(false)"
-                @blur="() => validatePhone(true)"
+                @input="validatePhone(false)"
+                @blur="validatePhone(true)"
               />
               <div v-if="errors.phone" class="text-danger">{{ errors.phone }}</div>
             </div>
           </div>
 
           <div class="text-center">
-            <button type="submit" @click="register" class="btn btn-primary me-2">Sign Up</button>
+            <button type="submit" class="btn btn-primary me-2">Sign Up</button>
           </div>
         </form>
       </div>
@@ -97,13 +96,13 @@
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
-// import useLocalStorage from '../store/useLocalStorage'
+//
+import db from '../firebase/init.js'
+import { doc, setDoc } from 'firebase/firestore'
 // import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 const router = useRouter()
 const auth = getAuth()
-// const db = getFirestore()
-// const users = useLocalStorage([], 'users')
 
 const formData = ref({
   fullname: '',
@@ -120,9 +119,20 @@ const errors = ref({
   email: null,
   password: null,
   confirmPassword: null,
-  gender: null,
   phone: null
 })
+
+// Validation functions
+const validateFullName = (blur) => {
+  const fullNameRegex = /^[A-Za-z\s_]+$/
+  if (!formData.value.fullname.trim()) {
+    if (blur) errors.value.fullname = 'Full Name is required.'
+  } else if (!fullNameRegex.test(formData.value.fullname.trim())) {
+    errors.value.fullname = 'Full Name can only contain letters, spaces, and underscores.'
+  } else {
+    errors.value.fullname = null
+  }
+}
 
 const validateEmail = (blur) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -155,20 +165,9 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
-const validateFullName = (blur) => {
-  const fullNameRegex = /^[A-Za-z\s_]+$/
-  if (!formData.value.fullname.trim()) {
-    if (blur) errors.value.fullname = 'Full Name is required.'
-  } else if (!fullNameRegex.test(formData.value.fullname.trim())) {
-    errors.value.fullname = 'Full Name can only contain letters, spaces, and underscores.'
-  } else {
-    errors.value.fullname = null
-  }
-}
-
 const validatePhone = (blur) => {
   if (formData.value.phone) {
-    const phonePattern = /^[0-9]{10,12}$/ //
+    const phonePattern = /^[0-9]{10,12}$/
     if (!phonePattern.test(formData.value.phone)) {
       if (blur) errors.value.phone = 'Invalid phone number. Must be 10-12 digits.'
     } else {
@@ -179,8 +178,11 @@ const validatePhone = (blur) => {
   }
 }
 
-const sanitizeInput = (input) => {
-  return input.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const handleEnter = (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    submitForm()
+  }
 }
 
 const submitForm = () => {
@@ -197,39 +199,10 @@ const submitForm = () => {
     !errors.value.confirmPassword &&
     !errors.value.phone
   ) {
-    const existingUser = users.value.find((user) => user.email === formData.value.email)
-    if (existingUser) {
-      errors.value.email = 'Email is already registered.'
-      return
+    if (formData.value.email === '7@gmail.com') {
+      formData.value.role = 'Admin'
     }
-
-    const sanitizedData = {
-      fullname: sanitizeInput(formData.value.fullname),
-      email: sanitizeInput(formData.value.email),
-      password: sanitizeInput(formData.value.password),
-      confirmPassword: sanitizeInput(formData.value.confirmPassword),
-      gender: sanitizeInput(formData.value.gender),
-      phone: sanitizeInput(formData.value.phone),
-      role: 'User'
-    }
-
-    console.log('Form submitted:', sanitizedData)
-
-    users.value.push(sanitizedData)
-    clearForm()
-    router.push({ name: 'Login' })
-  }
-}
-
-const clearForm = () => {
-  formData.value = {
-    fullname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    gender: '',
-    phone: '',
-    role: 'User'
+    register()
   }
 }
 
@@ -240,65 +213,35 @@ const register = () => {
     .then(async (userCredential) => {
       const user = userCredential.user
 
-      //Save additional user info in Firestore
+      // Create the user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
-        fullname,
-        email,
-        gender,
-        phone,
-        role
+        fullname: fullname,
+        email: email,
+        gender: gender,
+        phone: phone,
+        role: role,
+        createdAt: new Date()
       })
 
-      // await addDoc()
-
-      console.log('User registered and data saved in Firestore!')
-      router.push({ name: 'Login' }) // Redirect to login after registration
+      console.log('User registered and profile saved:', { fullname, email, gender, phone, role })
+      router.push({ name: 'Login' })
     })
     .catch((error) => {
       console.error('Error during registration:', error.code)
     })
-
-  return {
-    formData,
-    register
-  }
 }
-
 // const register = () => {
-//   createUserWithEmailAndPassword(auth, email.value, password.value)
-//     .then((data) => {
-//       console.log('Successful Registered!')
+//   const { email, password, fullname, gender, phone, role } = formData.value
+
+//   createUserWithEmailAndPassword(auth, email, password)
+//     .then(async (userCredential) => {
+//       const user = userCredential.user
+
+//       console.log('User registered:', { fullname, email, gender, phone, role })
 //       router.push({ name: 'Login' })
 //     })
 //     .catch((error) => {
-//       console.log(error.code)
+//       console.error('Error during registration:', error.code)
 //     })
 // }
 </script>
-<!-- 
-<template>
-  <h1>Create an Account</h1>
-  <p><input type="text" placeholder="Email" v-model="email" /></p>
-  <p><input type="password" placeholder="Password" v-model="password" /></p>
-  <p><button @click="register">Save to Firebase</button></p>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router'
-const email = ref('')
-const password = ref('')
-const router = useRouter()
-const auth = getAuth()
-const register = () => {
-  createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
-      console.log('Firebase Register Successful!')
-      router.push({ name: 'Login' })
-    })
-    .catch((error) => {
-      console.log(error.code)
-    })
-}
-</script> -->

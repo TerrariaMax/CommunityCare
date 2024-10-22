@@ -43,6 +43,7 @@
 
 <script>
 import { ref } from 'vue'
+import { mapActions } from 'vuex'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
@@ -60,6 +61,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['login']),
     validateEmail(onBlur) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!this.formData.email) {
