@@ -7,7 +7,7 @@ import ServicesView from '../views/ServicesView.vue'
 import FamilyViolence from '../subviews/FamilyViolence.vue'
 import AgedCare from '../subviews/AgedCare.vue'
 import DisabilitySupport from '../subviews/DisabilitySupport.vue'
-import ResourcesView from '../views/CountBookAPI.vue'
+import ResourcesView from '../views/ResourcesView.vue'
 import PreventingViolence from '../subviews/PreventingViolence.vue'
 import HealthResources from '../subviews/HealthResources.vue'
 import News from '../subviews/News.vue'
@@ -16,14 +16,10 @@ import JoinUsView from '../views/JoinUsView.vue'
 import Volunteer from '../subviews/Volunteer.vue'
 import Work from '../subviews/Work.vue'
 import AdminView from '../views/AdminView.vue'
-import LoginView from '../views/LoginView.vue'
-import SignUpView from '../views/SignUpView.vue'
 import AccessDenied from '../views/AccessDenied.vue'
 import store from '../store/store'
 import FirebaseRegisterView from '@/views/FirebaseRegisterView.vue'
 import FirebaseSigninView from '@/views/FirebaseSigninView.vue'
-import CountBookAPI from '../views/CountBookAPI.vue'
-import GetAllBookAPI from '@/views/GetAllBookAPI.vue'
 
 const routes = [
   {
@@ -73,7 +69,7 @@ const routes = [
   {
     path: '/resources',
     name: 'Resources',
-    component: CountBookAPI,
+    component: ResourcesView,
     children: [
       {
         path: 'preventing-violence',
@@ -128,11 +124,6 @@ const routes = [
     path: '/sign-up',
     name: 'SignUp',
     component: FirebaseRegisterView
-  },
-  {
-    path: '/get-all-books',
-    name: 'GetAllBookAPI',
-    component: GetAllBookAPI
   },
   // {
   //   path: '/login',

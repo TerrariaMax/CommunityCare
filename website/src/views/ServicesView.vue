@@ -69,7 +69,7 @@ export default {
     const newReview = ref({
       rating: 0,
       review: '',
-      fullname: '' // Add fullname field
+      fullname: ''
     })
 
     // Load reviews and average rating

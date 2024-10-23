@@ -18,7 +18,7 @@ import NavBar from './components/NavBar.vue'
 
 <script>
 import NavBar from './components/NavBar.vue'
-import CountBookAPI from './views/CountBookAPI.vue'
+import CountBookAPI from './views/ResourcesView.vue'
 
 export default {
   name: 'App',
