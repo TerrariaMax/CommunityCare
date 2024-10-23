@@ -71,6 +71,98 @@ export default {
       review: '',
       fullname: ''
     })
+    const reviews = ref([])
+
+    // Load reviews and user details
+    const loadReviews = async () => {
+      const reviewsSnapshot = await getDocs(collection(db, 'reviews'))
+      const reviewsArray = await Promise.all(
+        reviewsSnapshot.docs.map(async (doc) => {
+          const reviewData = { id: doc.id, ...doc.data() }
+          // Fetch user details
+          const userSnapshot = await getDocs(collection(db, 'users'))
+          const user = userSnapshot.docs.find((userDoc) => userDoc.id === reviewData.userId)
+          if (user) {
+            reviewData.fullname = user.data().fullname // Assuming 'fullname' exists in the user document
+          }
+          return reviewData
+        })
+      )
+      return reviewsArray
+    }
+
+    onMounted(async () => {
+      const reviewsData = await loadReviews()
+      store.dispatch('setReviews', reviewsData)
+      reviews.value = reviewsData
+    })
+
+    const submitReview = async () => {
+      if (hasReviewed.value) return
+
+      const user = auth.currentUser
+      if (!user) return
+
+      // Set fullname from Firebase Authentication
+      newReview.value.fullname = user.fullname || 'Anonymous' // Use displayName or a fallback
+
+      const review = {
+        ...newReview.value,
+        userId: user.uid
+      }
+
+      // Ensure no undefined values are sent to Firestore
+      if (!review.fullname || !review.review) {
+        console.error('Review data is incomplete.')
+        return
+      }
+
+      await addDoc(collection(db, 'reviews'), review)
+      store.dispatch('addReview', review)
+      newReview.value.rating = 0
+      newReview.value.review = ''
+      newReview.value.fullname = '' // Clear fullname after submission
+    }
+
+    const hasReviewed = computed(() => {
+      return store.getters.reviews.some((review) => review.userId === auth.currentUser?.uid)
+    })
+
+    return {
+      newReview,
+      submitReview,
+      reviews: computed(() => store.getters.reviews),
+      averageRating: computed(() => {
+        return store.getters.averageRating || 0 // Fetch average rating from store or default to 0
+      }),
+      isAuthenticated: computed(() => !!auth.currentUser), // Use auth to check if user is authenticated
+      hasReviewed
+    }
+  }
+}
+</script>
+
+<!-- 
+<script>
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { collection, addDoc, getDocs } from 'firebase/firestore'
+import db from '../firebase/init.js'
+import { getAuth } from 'firebase/auth'
+import Rating from 'primevue/rating'
+
+export default {
+  components: {
+    Rating
+  },
+  setup() {
+    const store = useStore()
+    const auth = getAuth()
+    const newReview = ref({
+      rating: 0,
+      review: '',
+      fullname: ''
+    })
 
     // Load reviews and average rating
     const loadReviews = async () => {
@@ -121,7 +213,7 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <!-- <template>
   <div class="container mt-5">

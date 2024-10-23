@@ -20,6 +20,7 @@ import AccessDenied from '../views/AccessDenied.vue'
 import store from '../store/store'
 import FirebaseRegisterView from '@/views/FirebaseRegisterView.vue'
 import FirebaseSigninView from '@/views/FirebaseSigninView.vue'
+import { getAuth } from 'firebase/auth'
 
 const routes = [
   {

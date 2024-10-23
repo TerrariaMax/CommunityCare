@@ -42,11 +42,11 @@ export default createStore({
       commit('addReview', review)
     },
     login({ commit }, user) {
-      commit('setAuthentication', false)
+      commit('setAuthentication', true)
       commit('setUser', user)
     },
     logout({ commit }) {
-      commit('setAuthentication', true)
+      commit('setAuthentication', false)
       commit('setUser', null)
     },
     // addReview({ commit, dispatch }, review) {

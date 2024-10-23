@@ -43,7 +43,7 @@
 
 <script>
 import { ref } from 'vue'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
@@ -60,6 +60,9 @@ export default {
       }
     }
   },
+  // computed: {
+  //   ...mapGetters(['isAuthenticated'])
+  // },
   methods: {
     ...mapActions(['login']),
     validateEmail(onBlur) {
@@ -101,6 +104,8 @@ export default {
         .then((userCredential) => {
           console.log('Firebase Sign in Successful!')
           const user = userCredential.user
+          this.login(user)
+          console.log('isAuthenticated after login:', this.$store.state.isAuthenticated)
           this.$router.push({ name: 'Home' }) // Redirect to home page
         })
         .catch((error) => {
